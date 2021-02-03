@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\blog;
 use App\Models\User;
+use App\Models\J_Permission\Models\Role;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Pagination\Paginator;
 class HomeController extends Controller
@@ -16,11 +17,12 @@ class HomeController extends Controller
      */
     public function index()
     {
-        
         $blogs =  Blog::orderBy('id','Desc')->paginate(4);
         Paginator::useBootstrap();
-
-        return view('home',compact('blogs'));
+        
+        $user_name = User::get();
+      
+        return view('home',compact('blogs','user_name'));
     }
 
     /**
@@ -31,7 +33,10 @@ class HomeController extends Controller
     public function create()
     {
         Gate::authorize('haveaccess','blog.create');
-        return view('blog.create');
+
+        $id = auth()->user()->id;
+      
+        return view('blog.create',compact('id'));
     }
 
     /**
@@ -42,6 +47,8 @@ class HomeController extends Controller
      */
     public function store(Request $request)
     {
+
+        
         $request->validate([
 
             'title' => 'required|max:50|unique:blog,title',
@@ -49,7 +56,7 @@ class HomeController extends Controller
             'user_id' => '',  
 
         ]);
-
+    
         $blog = Blog::create($request->all());
 
         return redirect()->route('home.index')
@@ -64,7 +71,9 @@ class HomeController extends Controller
      */
     public function show($id)
     {
-        Gate::authorize('haveaccess','blog.show');
+
+        
+        //Gate::authorize('haveaccess','blog.show');
         $blog = Blog::find($id);
       
         return view('blog.show',compact('blog'));
@@ -78,8 +87,12 @@ class HomeController extends Controller
      */
     public function edit($id)
     {
-        Gate::authorize('haveaccess','blog.edit');
-        $blog = Blog::find($id);
+        $blog = blog::find($id);
+ 
+        $this->authorize('update',[$blog, ['blog.edit','editown.blog']]);
+
+        //Gate::authorize('haveaccess','blog.edit');
+        
         
         return view('blog.edit',compact('blog'));
     }
@@ -120,10 +133,12 @@ class HomeController extends Controller
      */
     public function destroy($id)
     {
-        Gate::authorize('haveaccess','blog.destroy');
-        $user = Blog::find($id);
+        //Gate::authorize('haveaccess','blog.destroy');
+        $blog = blog::find($id);
 
-        $user->delete();
+        $this->authorize('delete',[$blog, ['blog.destroy','destroyown.blog']]);
+
+        $blog->delete();
         return redirect()->route('home.index')
         ->with('status','Public removed successfully');
     }

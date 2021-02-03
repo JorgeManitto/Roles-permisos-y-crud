@@ -21,9 +21,9 @@
                                 <input type="text" class="form-control" id="title" placeholder="title"
                                 name="title" value="">
                               </div>
-                              <select name="user_id" id="">
-                                  <option value="1">admin</option>
-                              </select>
+                            
+                              <input type="hidden" value="{{$id}}" name="user_id">
+
                               <div class="form-group">
                                 <label for="content">Content</label>
                                 <textarea name="content" placeholder="content" class="form-control" id="description" rows="3"

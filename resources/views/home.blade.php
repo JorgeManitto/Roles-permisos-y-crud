@@ -1,3 +1,6 @@
+<?php
+$user = App\Models\blog::class;                       
+?>
 @extends('layouts.app')
 
 @section('content')
@@ -19,18 +22,16 @@
             <div class="card">
 
                 <div class="card-header">
-                    {{$blog->title}}
-                    
-                   <div class="" style="float: right;">
                     <a href="{{ route('home.show',$blog->id)}}">
-                        <i class="far fa-eye"></i>
-                    </a>
-
-                    <a href="{{route('home.edit',$blog->id)}}">
-                        <i class="far fa-edit"></i>
-                    </a>
-                
-                
+                    {{$blog->title}}
+                </a>  
+                   <div class="" style="float: right;">
+                  
+                    @can('update',[$user,$blog,['blog.edit','editown.blog']])
+                    <a href="{{route('home.edit',$blog->id)}}"><i class="far fa-edit"></i></a>
+                    @endcan
+                     
+                     @can('update',[$user,$blog,['blog.destroy','destroyown.blog']])           
                <form action="{{route('home.destroy',$blog->id)}}" method="post"
                 style="display: inline-block;">
                    @csrf
@@ -39,6 +40,8 @@
                     <i class="far fa-trash-alt"></i>
                 </button>
                </form>
+                    @endcan
+
                    </div>
                 </div>
 
@@ -47,16 +50,26 @@
                 </div>
 
                 <div class="card-footer">
-                   <div class="float-right">
+                   <div class="" style="float: right">
+
                     {{$blog->created_at}}
+
                    </div>
-                   
+                   @foreach ($user_name as $name)
+                   @if ($blog->user_id == $name->id)
+                       {{$name->name}}
+                   @endif                   
+                   @endforeach
                 </div>
             </div>
           </div>
 
           @endforeach
-          
+          <div>
+           
+           
+     
+          </div>
         </div>
         <div class="mt-5">
             {{ $blogs->links() }}

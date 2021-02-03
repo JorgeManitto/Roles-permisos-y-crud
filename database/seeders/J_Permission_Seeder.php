@@ -46,11 +46,62 @@ class J_Permission_Seeder extends Seeder
             'full-access' => 'no',
     
         ]);
-
         $useradmin->roles()->sync([ $roladmin->id]);
         
-
         $permission_all = [];
+
+        //blog
+
+        $permission = Permission::create([
+            'name'  => 'Edit own blog',
+            'slug'  => 'editown.blog',
+            'description' => ' A user can edit own blog',
+        ]);
+
+        $permission_all[]= $permission->id;
+        
+
+        $permission = Permission::create([
+            'name'  => 'Destroy own blog',
+            'slug'  => 'destroyown.blog',
+            'description' => ' A user can Destroy own blog',
+        ]);
+
+        $permission_all[]= $permission->id;
+        
+        $permission = Permission::create([
+            'name'  => 'Create blog',
+            'slug'  => 'blog.create',
+            'description' => ' A user can Create blog',
+        ]);
+
+        $permission_all[]= $permission->id;
+
+        $userrole->permissions()->sync($permission_all);
+        
+        $permission = Permission::create([
+            'name'  => 'Destroy blog',
+            'slug'  => 'blog.destroy',
+            'description' => ' A user can delete blog',
+        ]);
+
+        $permission_all[]= $permission->id;
+
+        $permission = Permission::create([
+            'name'  => 'Show blog',
+            'slug'  => 'blog.show',
+            'description' => ' A user can show blog',
+        ]);
+
+        $permission_all[]= $permission->id;
+
+        $permission = Permission::create([
+            'name'  => 'Edit blog',
+            'slug'  => 'blog.edit',
+            'description' => ' A user can edit blog',
+        ]);
+
+        $permission_all[]= $permission->id;
 
         $permission = Permission::create([
             'name'  => 'List role',
@@ -155,38 +206,7 @@ class J_Permission_Seeder extends Seeder
 
         $permission_all[]= $permission->id;
 
-            //blog
-        $permission = Permission::create([
-            'name'  => 'Create blog',
-            'slug'  => 'blog.create',
-            'description' => ' A user can create blog',
-        ]);
-        $permission_all[]= $permission->id;
-
-        $permission = Permission::create([
-            'name'  => 'Destroy blog',
-            'slug'  => 'blog.destroy',
-            'description' => ' A user can delete blog',
-        ]);
-
-        $permission_all[]= $permission->id;
-
-        $permission = Permission::create([
-            'name'  => 'Show blog',
-            'slug'  => 'blog.show',
-            'description' => ' A user can show blog',
-        ]);
-
-        $permission_all[]= $permission->id;
-
-        $permission = Permission::create([
-            'name'  => 'Edit blog',
-            'slug'  => 'blog.edit',
-            'description' => ' A user can edit blog',
-        ]);
-
-        $permission_all[]= $permission->id;
-        
+         
         //$roladmin->permissions()->sync($permission_all);
     }
 }
